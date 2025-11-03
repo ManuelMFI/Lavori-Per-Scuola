@@ -42,13 +42,13 @@ function genera() {
     "Massimo: " + max + "<br>" +
     "Minimo: " + min;
 
-  for (let i = 0; i < numbers.length; i++) {
+  for (let i = 0; i < numeri.length; i++) {
     const div = document.createElement('div');
     div.textContent = numeri[i];
     document.getElementById("tutti").appendChild(div);
 }
 
-for (let i = 0; i < numbers2.length; i++) {
+for (let i = 0; i < top50.length; i++) {
     const div = document.createElement('div');
     div.textContent = top50[i];
       document.getElementById("top50").appendChild(div);
