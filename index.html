@@ -1,9 +1,19 @@
 <!doctype html>
 <html lang="it">
+
 <head>
   <meta charset="utf-8">
   <title>Numeri Casuali</title>
+  <link rel="stylesheet" href="https://star08-web.pages.dev/css/pico/pico.min.css">
+  <style>
+    .grid>div {
+      border: 1px solid red;
+      padding: 10px;
+      text-align: center;
+    }
+  </style>
 </head>
+
 <body>
   <h1>Numeri casuali da -100 a 100</h1>
   <button onclick="genera()">Genera numeri</button>
@@ -12,11 +22,12 @@
   <p id="risultati"></p>
 
   <h3>Tutti i 100 numeri:</h3>
-  <p id="tutti"></p>
+  <div class="grid" id="tutti"></div>
 
   <h3>I 50 numeri più grandi:</h3>
-  <p id="top50"></p>
+  <div class="grid" id="top50"></div>
 
   <script src="script.js"></script>
 </body>
+
 </html>

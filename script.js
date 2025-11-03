@@ -42,6 +42,15 @@ function genera() {
     "Massimo: " + max + "<br>" +
     "Minimo: " + min;
 
-  document.getElementById("tutti").textContent = numeri.join(", ");
-  document.getElementById("top50").textContent = top50.join(", ");
+  for (let i = 0; i < numbers.length; i++) {
+    const div = document.createElement('div');
+    div.textContent = numeri[i];
+    document.getElementById("tutti").appendChild(div);
+}
+
+for (let i = 0; i < numbers2.length; i++) {
+    const div = document.createElement('div');
+    div.textContent = top50[i];
+      document.getElementById("top50").appendChild(div);
+}
 }
