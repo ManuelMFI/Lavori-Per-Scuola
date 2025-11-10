@@ -127,21 +127,26 @@ function calcola() {
         mezzi = "Nessuno";
     }
 
-    // Materie molto semplice
+    // Materie – versione ultra semplificata
     let materieSel = document.getElementById("materie");
     let materie = "";
     let cont = 0;
-    for (let i = 0; i < materieSel.options.length; i++) {
-        if (materieSel.options[i].selected) {
+    let i = 0;
+
+    while (i < materieSel.options.length) {
+        let opzione = materieSel.options[i];
+        if (opzione.selected == true) {
             cont = cont + 1;
             if (cont > 3) {
                 alert("Puoi scegliere al massimo 3 materie!");
                 return;
             }
-            let materiaScelta = materieSel.options[i].value;
-            materie = materie + materiaScelta + " ";
+            let nomeMateria = opzione.value;
+            materie = materie + nomeMateria + " ";
         }
+        i = i + 1;
     }
+
     if (materie == "") {
         materie = "Nessuna";
     }
