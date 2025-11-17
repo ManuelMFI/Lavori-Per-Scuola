@@ -100,7 +100,7 @@
 function calcola() {
 
     // OGGETTO PERSONA
-    var persona = {
+    let persona = {
         nome: "",
         cognome: "",
         indirizzo: "",
@@ -123,8 +123,8 @@ function calcola() {
     persona.eta = document.getElementById("eta").value;
 
     // SESSO
-    var radios = document.getElementsByName("sesso");
-    var i = 0;
+    let radios = document.getElementsByName("sesso");
+    let i = 0;
     while (i < radios.length) {
         if (radios[i].checked) {
             persona.sesso = radios[i].value;
@@ -136,9 +136,9 @@ function calcola() {
     }
 
     // MEZZI
-    var checks = document.getElementsByName("mezzi");
-    var j = 0;
-    var listaMezzi = "";
+    let checks = document.getElementsByName("mezzi");
+    let j = 0;
+    let listaMezzi = "";
     while (j < checks.length) {
         if (checks[j].checked) {
             listaMezzi = listaMezzi + checks[j].value + " ";
@@ -151,13 +151,13 @@ function calcola() {
     persona.mezzi = listaMezzi;
 
     // MATERIE
-    var sel = document.getElementById("materie");
-    var k = 0;
-    var cont = 0;
-    var listaMaterie = "";
+    let sel = document.getElementById("materie");
+    let k = 0;
+    let cont = 0;
+    let listaMaterie = "";
 
     while (k < sel.options.length) {
-        var opzione = sel.options[k];
+        let opzione = sel.options[k];
         if (opzione.selected == true) {
             cont = cont + 1;
             if (cont > 3) {
@@ -175,8 +175,8 @@ function calcola() {
     persona.materie = listaMaterie;
 
     // GENERAZIONE
-    var anno = 2025 - persona.eta;
-    var gen = "";
+    let anno = 2025 - persona.eta;
+    let gen = "";
 
     if (anno >= 2013) gen = "Generazione Alpha (2013 - oggi)";
     else if (anno >= 1997) gen = "Generazione Z (1997 - 2012)";
