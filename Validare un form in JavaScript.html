@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <title>Validazione form</title>
+</head>
+<body>
+
+<h1>Form di registrazione</h1>
+
+<form id="form">
+    Email:<br>
+    <input type="text" id="email"><br><br>
+
+    Password:<br>
+    <input type="password" id="password"><br><br>
+
+    <input type="submit" value="Invia">
+</form>
+
+<p id="msg"></p>
+
+<script>
+document.getElementById("form").addEventListener("submit", function(e) {
+    e.preventDefault();
+
+    var password = document.getElementById("password").value;
+    var msg = document.getElementById("msg");
+    msg.style.color = "red";
+    msg.innerHTML = "";
+
+    if (password == "") {
+        msg.innerHTML = "Inserisci la password";
+        return;
+    }
+
+    if (password.length < 8) {
+        msg.innerHTML = "Password troppo corta";
+        return;
+    }
+
+    // controllo prima lettera maiuscola
+    var primoCarattere = password.charAt(0);
+    if (primoCarattere < "A" || primoCarattere > "Z") {
+        msg.innerHTML = "La password deve iniziare con una lettera maiuscola";
+        return;
+    }
+
+    // controllo carattere speciale
+    if (
+        password.indexOf("@") == -1 &&
+        password.indexOf("#") == -1 &&
+        password.indexOf("?") == -1 &&
+        password.indexOf("$") == -1 &&
+        password.indexOf("-") == -1 &&
+        password.indexOf("_") == -1
+    ) {
+        msg.innerHTML = "Manca un carattere speciale";
+        return;
+    }
+
+    msg.style.color = "green";
+    msg.innerHTML = "Form inviato correttamente";
+});
+</script>
+
+</body>
+</html>
