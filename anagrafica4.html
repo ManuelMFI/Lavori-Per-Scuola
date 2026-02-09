@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <title>Dati Utente</title>
+
 <style>
     body {
         font-family: Arial;
@@ -33,6 +34,7 @@
     }
 </style>
 </head>
+
 <body>
 
 <div class="box">
@@ -63,6 +65,15 @@
     <label>CAP:</label>
     <input type="text" id="cap">
 
+    <label>Username:</label>
+    <input type="text" id="username">
+
+    <label>Password:</label>
+    <input type="password" id="password">
+
+    <label>Email:</label>
+    <input type="text" id="email">
+
     <label>Età:</label>
     <input type="number" id="eta" min="0" max="120">
 
@@ -72,159 +83,104 @@
     <input type="radio" name="sesso" value="Altro" class="inline"> Altro
     <br><br>
 
-    <label>Mezzi di locomozione posseduti in famiglia:</label><br>
+    <label>Mezzi di locomozione:</label><br>
     <input type="checkbox" name="mezzi" value="Auto" class="inline"> Auto
     <input type="checkbox" name="mezzi" value="Moto" class="inline"> Moto
     <input type="checkbox" name="mezzi" value="Bici" class="inline"> Bici
-    <input type="checkbox" name="mezzi" value="Aereo" class="inline"> Aereo
-    <input type="checkbox" name="mezzi" value="Yacht" class="inline"> Yacht
     <br><br>
 
-    <label>Materie di insegnamento preferite (max 3):</label>
+    <label>Materie preferite (max 3):</label>
     <select id="materie" multiple size="5">
-        <option value="Matematica">Matematica</option>
-        <option value="Italiano">Italiano</option>
-        <option value="Inglese">Inglese</option>
-        <option value="Storia">Storia</option>
-        <option value="Geografia">Geografia</option>
-        <option value="Scienze">Scienze</option>
-        <option value="Arte">Arte</option>
-        <option value="Educazione Fisica">Educazione Fisica</option>
-        <option value="Musica">Musica</option>
+        <option>Matematica</option>
+        <option>Italiano</option>
+        <option>Inglese</option>
+        <option>Storia</option>
+        <option>Geografia</option>
+        <option>Scienze</option>
     </select>
 
-    <button onclick="calcola()">Scopri Generazione</button>
+    <button onclick="valida()">Controlla Dati</button>
     <button onclick="inviaMultiplo()">Invio multiplo</button>
     <button onclick="vaiAllaStampa()">Stampa dati</button>
 </div>
 
 <script>
-function calcola() {
 
-    let persona = {
-        nome: "",
-        cognome: "",
-        indirizzo: "",
-        citta: "",
-        provincia: "",
-        cap: "",
-        eta: "",
-        sesso: "",
-        mezzi: "",
-        materie: ""
-    };
-
-    persona.nome = document.getElementById("nome").value;
-    persona.cognome = document.getElementById("cognome").value;
-    persona.indirizzo = document.getElementById("indirizzo").value;
-    persona.citta = document.getElementById("citta").value;
-    persona.provincia = document.getElementById("provincia").value;
-    persona.cap = document.getElementById("cap").value;
-    persona.eta = document.getElementById("eta").value;
-
-    let radios = document.getElementsByName("sesso");
-    let i = 0;
-    while (i < radios.length) {
-        if (radios[i].checked) {
-            persona.sesso = radios[i].value;
+    function inviaMultiplo() {
+    
+        let nome = document.getElementById("nome").value.trim();
+        let cognome = document.getElementById("cognome").value.trim();
+        let cap = document.getElementById("cap").value.trim();
+        let username = document.getElementById("username").value.trim();
+        let password = document.getElementById("password").value.trim();
+        let email = document.getElementById("email").value.trim();
+        let eta = document.getElementById("eta").value;
+    
+        // REGEX
+        let nomeCognomeRegex = /^[A-Za-z]+$/;
+        let capRegex = /^[0-9]+$/;
+        let usernameRegex = /^[A-Za-z0-9!@#$%^&*._-]{3,16}$/;
+        let emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        let passwordRegex = /^(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*._-]).{4,}$/;
+    
+        // CONTROLLI CON IF
+    
+        if (nome === "" || !nomeCognomeRegex.test(nome)) {
+            alert("Nome non valido: solo lettere.");
+            return;
         }
-        i++;
-    }
-    if (persona.sesso == "") persona.sesso = "Non specificato";
-
-    let checks = document.getElementsByName("mezzi");
-    let j = 0;
-    let listaMezzi = "";
-    while (j < checks.length) {
-        if (checks[j].checked) {
-            listaMezzi += checks[j].value + " ";
+    
+        if (cognome === "" || !nomeCognomeRegex.test(cognome)) {
+            alert("Cognome non valido: solo lettere.");
+            return;
         }
-        j++;
-    }
-    if (listaMezzi == "") listaMezzi = "Nessuno";
-    persona.mezzi = listaMezzi;
-
-    let sel = document.getElementById("materie");
-    let k = 0;
-    let cont = 0;
-    let listaMaterie = "";
-
-    while (k < sel.options.length) {
-        if (sel.options[k].selected) {
-            cont++;
-            if (cont > 3) {
-                alert("Puoi scegliere al massimo 3 materie!");
-                return;
-            }
-            listaMaterie += sel.options[k].value + " ";
+    
+        if (!capRegex.test(cap)) {
+            alert("CAP non valido: solo numeri.");
+            return;
         }
-        k++;
+    
+        if (!usernameRegex.test(username)) {
+            alert("Username non valido: 3-16 caratteri ammessi.");
+            return;
+        }
+    
+        if (!passwordRegex.test(password)) {
+            alert("Password non valida:\n- minimo 4 caratteri\n- almeno una maiuscola\n- almeno un numero\n- almeno un carattere speciale");
+            return;
+        }
+    
+        if (!emailRegex.test(email)) {
+            alert("Email non valida.");
+            return;
+        }
+    
+        // Se tutti i controlli sono superati
+    
+        let persone = JSON.parse(localStorage.getItem("persone")) || [];
+    
+        if (persone.length >= 4) {
+            alert("Massimo 4 persone");
+            return;
+        }
+    
+        let persona = {
+            nome: nome,
+            cognome: cognome,
+            eta: eta
+        };
+    
+        persone.push(persona);
+        localStorage.setItem("persone", JSON.stringify(persone));
+    
+        alert("Persona inserita (" + persone.length + ")");
     }
-    if (listaMaterie == "") listaMaterie = "Nessuna";
-    persona.materie = listaMaterie;
-
-    let anno = 2025 - persona.eta;
-    let gen = "";
-
-    if (anno >= 2013) gen = "Generazione Alpha";
-    else if (anno >= 1997) gen = "Generazione Z";
-    else if (anno >= 1981) gen = "Millennials";
-    else if (anno >= 1965) gen = "Generazione X";
-    else if (anno >= 1946) gen = "Baby Boomers";
-    else gen = "Altro";
-
-    alert(
-        "Ciao " + persona.nome + " " + persona.cognome + "\n" +
-        "Generazione: " + gen
-    );
-}
-
-function inviaMultiplo() {
-
-    let persone = JSON.parse(localStorage.getItem("persone"));
-    if (persone == null) persone = [];
-
-    if (persone.length >= 4) {
-        alert("Massimo 4 persone");
-        return;
+    
+    function vaiAllaStampa() {
+        window.location.href = "stampaNuova.html";
     }
+    
+    </script>
 
-    let persona = {
-        nome: document.getElementById("nome").value,
-        cognome: document.getElementById("cognome").value,
-        eta: document.getElementById("eta").value
-    };
-
-    persone.push(persona);
-
-    localStorage.setItem("persone", JSON.stringify(persone));
-
-    document.getElementById("nome").value = "";
-    document.getElementById("cognome").value = "";
-    document.getElementById("eta").value = "";
-
-    alert("Persona inserita (" + persone.length + ")");
-}
-</script>
-<script>
-function vaiAllaStampa() {
-
-    let persone = JSON.parse(localStorage.getItem("persone"));
-
-    if (!persone || persone.length == 0) {
-        alert("Inserisci almeno una persona");
-        return;
-    }
-
-    let url = "stampa.html?";
-    for (let i = 0; i < persone.length; i++) {
-        let indice = (i + 1).toString().padStart(2, "0");
-        url += "id=" + indice + "&";
-    }
-
-    url = url.slice(0, -1); // tolgo & finale
-    window.location.href = url;
-}
-</script>
 </body>
 </html>
