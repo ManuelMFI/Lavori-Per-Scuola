@@ -1,25 +1,30 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="it">
 <head>
-    <meta charset="UTF-8">
-    <title>Manuel Manfredi</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Manfredi</title>
-    <link rel="stylesheet" href="https://star08-web.pages.dev/css/pico/pico.min.css">
-</head>
-<body>
-    <main class="container">
-        <ul>
-            <li><a href="./array.html" target="_blank" rel="noopener noreferrer">Array</a></li>
-            <li><a href="./anagrafica1.html" target="_blank" rel="noopener noreferrer">Anagrafica 1.0</a></li>
-            <li><a href="./anagrafica2.html" target="_blank" rel="noopener noreferrer">Anagrafica 2.0</a></li>
-            <li><a href="./anagrafica3.html" target="_blank" rel="noopener noreferrer">Anagrafica 3.0</a></li>
-            <li><a href="./stella.html" target="_blank" rel="noopener noreferrer">Stella nel cerchio</a></li>
-            <li><a href="./anagrafica4.html" target="_blank" rel="noopener noreferrer">Anagrafica 4.0</a></li>
-            <li><a href="./Validare un form in JavaScript.html" target="_blank" rel="noopener noreferrer">Validare un form in JavaScript</a></li>
-            <li><a href="./anagrafica5.html" target="_blank" rel="noopener noreferrer">Anagrafica 5.0</a></li>
-        </ul>
-    </main>
-</body>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cat vs Dog AI - PWA</title>
 
+  <link rel="manifest" href="manifest.json" />
+  <meta name="theme-color" content="#2196f3" />
+</head>
+<body style="font-family: Arial; text-align: center; padding: 20px;">
+  <h1>🐱 vs 🐶 Riconoscimento Immagini</h1>
+
+  <input type="file" accept="image/*" id="imageInput" capture="environment" disabled />
+  <br /><br />
+
+  <img id="preview" width="300" style="border-radius: 10px;" />
+  <p id="result">Caricamento modello...</p>
+
+  <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@4.16.0"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/mobilenet"></script>
+  <script src="app.js"></script>
+
+  <script>
+    if ("serviceWorker" in navigator) {
+      navigator.serviceWorker.register("sw.js");
+    }
+  </script>
+</body>
 </html>
