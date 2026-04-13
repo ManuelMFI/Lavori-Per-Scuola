@@ -132,12 +132,18 @@ function aggiornaCarrello() {
     const lista = document.getElementById("carrello");
     lista.innerHTML = "";
 
-    carrello.forEach((p, index) => {
-        lista.innerHTML += `
-            <li>
-                ${p.nome} - €${p.prezzo}
-                <button onclick="rimuoviDalCarrello(${index})">❌</button>
-            </li>
+    function aggiornaCarrello() {
+    var lista = document.getElementById("carrello");
+    lista.innerHTML = "";
+
+    for (var i = 0; i < carrello.length; i++) {
+        lista.innerHTML = lista.innerHTML +
+        "<li>" +
+        carrello[i].nome + " - €" + carrello[i].prezzo +
+        " <button onclick='rimuoviDalCarrello(" + i + ")'>❌</button>" +
+        "</li>";
+    }
+}
         `;
     });
 }
