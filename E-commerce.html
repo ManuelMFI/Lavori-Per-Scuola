@@ -70,9 +70,14 @@ function mostraProdotti() {
     container.innerHTML = "";
 
     prodotti.forEach((p, index) => {
-        container.innerHTML += '<div style="border:1px solid black; margin:10px; padding:10px;"><h3>' + p.nome + '</h3><p>Tipo: ' + p.tipo + '</p><p>' + p.descrizione + '</p><p>Prezzo: ' + p.prezzo + '</p><button onclick="aggiungiCarrello(' + index + ')">Aggiungi al carrello</button></div>';
-
-       
+        container.innerHTML += 
+        '<div style="border:1px solid black; margin:10px; padding:10px;">' +
+        '<h3>' + p.nome + '</h3>' +
+        '<p>Tipo: ' + p.tipo + '</p>' +
+        '<p>' + p.descrizione + '</p>' +
+        '<p>Prezzo: €' + p.prezzo + '</p>' +
+        '<button onclick="aggiungiCarrello(' + index + ')">Aggiungi al carrello</button>' +
+        '</div>';
     });
 }
 
@@ -126,9 +131,23 @@ function aggiornaCarrello() {
     const lista = document.getElementById("carrello");
     lista.innerHTML = "";
 
+    let totale = 0;
+
     carrello.forEach((p, index) => {
-        lista.innerHTML += "<li>" + p.nome + " - €" + p.prezzo + " <button onclick=\"rimuoviDalCarrello(" + index + ")\">❌</button></li>";
+
+        lista.innerHTML += 
+        "<li>" + 
+        p.nome + 
+        " - €" + 
+        p.prezzo + 
+        ' <button onclick="rimuoviDalCarrello(' + index + ')">❌</button></li>';
+
+        totale += parseFloat(p.prezzo);
     });
+
+    // TOTALE
+    lista.innerHTML += 
+    "<li><strong>Totale: €" + totale.toFixed(2) + "</strong></li>";
 }
 
 // COMPLETA ACQUISTO
@@ -164,11 +183,17 @@ function generaPDF() {
     doc.text("Email: " + utenteRegistrato.email, 10, 30);
 
     let y = 40;
+    let totale = 0;
 
     carrello.forEach(p => {
         doc.text(p.nome + " - €" + p.prezzo, 10, y);
         y += 10;
+
+        totale += parseFloat(p.prezzo);
     });
+
+    // TOTALE PDF
+    doc.text("Totale: €" + totale.toFixed(2), 10, y + 10);
 
     doc.save("ordine.pdf");
 }
