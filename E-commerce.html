@@ -3,29 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <title>Shop Semplice</title>
-
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-
-<style>
-body{
-    font-family: Arial;
-    margin:20px;
-}
-
-.prodotto{
-    border:1px solid black;
-    padding:10px;
-    margin:10px;
-    width:250px;
-}
-
-.prodotto img{
-    width:150px;
-    height:150px;
-    object-fit:cover;
-}
-</style>
-
 </head>
 
 <body>
@@ -39,55 +17,42 @@ body{
 <div id="prodotti"></div>
 
 <h2>Registrazione</h2>
-
 <input type="text" id="nome" placeholder="Nome">
 <input type="email" id="email" placeholder="Email">
 <input type="password" id="password" placeholder="Password">
-
 <button onclick="registrati()">Registrati</button>
 <button onclick="logout()">Logout</button>
 
 <h2>Carrello</h2>
-
 <ul id="carrello"></ul>
-
 <button onclick="completaAcquisto()">Carrello (Acquista)</button>
 <button onclick="generaPDF()">Scarica PDF</button>
 
 <script>
-
 let prodotti = [];
 let carrello = [];
 let utenteRegistrato = null;
 
 // LETTURA CSV
-document.getElementById("fileInput").addEventListener("change", function(e){
-
+document.getElementById("fileInput").addEventListener("change", function(e) {
     const file = e.target.files[0];
     const reader = new FileReader();
 
-    reader.onload = function(event){
-
+    reader.onload = function(event) {
         const testo = event.target.result;
-
         const righe = testo.split("\n");
 
         prodotti = [];
 
-        for(let i=1; i<righe.length; i++){
-
+        for (let i = 1; i < righe.length; i++) {
             let colonne = righe[i].split(",");
-
-            if(colonne.length < 5) continue;
+            if (colonne.length < 4) continue;
 
             let prodotto = {
-
                 tipo: colonne[0],
                 nome: colonne[1],
                 descrizione: colonne[2],
-                prezzo: colonne[3],
-                immagine: colonne[4]
-
+                prezzo: colonne[3]
             };
 
             prodotti.push(prodotto);
@@ -100,195 +65,138 @@ document.getElementById("fileInput").addEventListener("change", function(e){
 });
 
 // MOSTRA PRODOTTI
-function mostraProdotti(){
-
+function mostraProdotti() {
     const container = document.getElementById("prodotti");
-
     container.innerHTML = "";
 
-    prodotti.forEach((p,index)=>{
-
-        container.innerHTML +=
-
-        '<div class="prodotto">' +
-
-        '<img src="' + p.immagine + '">' +
-
+    prodotti.forEach((p, index) => {
+        container.innerHTML += 
+        '<div style="border:1px solid black; margin:10px; padding:10px;">' +
         '<h3>' + p.nome + '</h3>' +
-
-        '<p><b>Tipo:</b> ' + p.tipo + '</p>' +
-
+        '<p>Tipo: ' + p.tipo + '</p>' +
         '<p>' + p.descrizione + '</p>' +
-
-        '<p><b>Prezzo:</b> €' + p.prezzo + '</p>' +
-
+        '<p>Prezzo: €' + p.prezzo + '</p>' +
         '<button onclick="aggiungiCarrello(' + index + ')">Aggiungi al carrello</button>' +
-
         '</div>';
     });
 }
 
 // REGISTRAZIONE
-function registrati(){
-
+function registrati() {
     let nome = document.getElementById("nome").value;
-
     let email = document.getElementById("email").value;
-
     let password = document.getElementById("password").value;
 
-    if(nome==="" || email==="" || password===""){
-
+    if (nome === "" || email === "" || password === "") {
         alert("Compila tutti i campi!");
-
         return;
     }
 
     utenteRegistrato = {
-
-        nome:nome,
-        email:email,
-        password:password
+        nome: nome,
+        email: email,
+        password: password
     };
 
     alert("Registrazione completata!");
 }
 
 // LOGOUT
-function logout(){
-
+function logout() {
     utenteRegistrato = null;
-
     carrello = [];
-
     aggiornaCarrello();
-
     alert("Logout effettuato!");
 }
 
-// AGGIUNGI CARRELLO
-function aggiungiCarrello(index){
-
-    if(!utenteRegistrato){
-
+// AGGIUNGI AL CARRELLO
+function aggiungiCarrello(index) {
+    if (!utenteRegistrato) {
         alert("Devi registrarti prima!");
-
         return;
     }
 
     carrello.push(prodotti[index]);
-
     aggiornaCarrello();
 }
 
 // RIMUOVI DAL CARRELLO
-function rimuoviDalCarrello(index){
-
-    carrello.splice(index,1);
-
+function rimuoviDalCarrello(index) {
+    carrello.splice(index, 1);
     aggiornaCarrello();
 }
 
 // AGGIORNA CARRELLO
-function aggiornaCarrello(){
-
+function aggiornaCarrello() {
     const lista = document.getElementById("carrello");
-
     lista.innerHTML = "";
 
     let totale = 0;
 
-    carrello.forEach((p,index)=>{
+    carrello.forEach((p, index) => {
 
-        lista.innerHTML +=
-
-        "<li>" +
-
-        p.nome +
-
-        " - €" +
-
-        p.prezzo +
-
-        ' <button onclick="rimuoviDalCarrello(' + index + ')">❌</button>' +
-
-        "</li>";
+        lista.innerHTML += 
+        "<li>" + 
+        p.nome + 
+        " - €" + 
+        p.prezzo + 
+        ' <button onclick="rimuoviDalCarrello(' + index + ')">❌</button></li>';
 
         totale += parseFloat(p.prezzo);
     });
 
     // TOTALE
-    lista.innerHTML +=
-
-    "<li><strong>Totale: €" +
-
-    totale.toFixed(2) +
-
-    "</strong></li>";
+    lista.innerHTML += 
+    "<li><strong>Totale: €" + totale.toFixed(2) + "</strong></li>";
 }
 
 // COMPLETA ACQUISTO
-function completaAcquisto(){
-
-    if(!utenteRegistrato){
-
+function completaAcquisto() {
+    if (!utenteRegistrato) {
         alert("Registrati prima!");
-
         return;
     }
 
-    if(carrello.length===0){
-
+    if (carrello.length === 0) {
         alert("Carrello vuoto!");
-
         return;
     }
 
     alert("Acquisto completato da " + utenteRegistrato.nome);
 
     carrello = [];
-
     aggiornaCarrello();
 }
 
-// PDF
-function generaPDF(){
-
+// GENERA PDF
+function generaPDF() {
     const { jsPDF } = window.jspdf;
-
     const doc = new jsPDF();
 
-    if(!utenteRegistrato){
-
+    if (!utenteRegistrato) {
         alert("Registrati prima!");
-
         return;
     }
 
-    doc.text("Riepilogo Ordine",10,10);
-
-    doc.text("Nome: " + utenteRegistrato.nome,10,20);
-
-    doc.text("Email: " + utenteRegistrato.email,10,30);
+    doc.text("Riepilogo Ordine", 10, 10);
+    doc.text("Nome: " + utenteRegistrato.nome, 10, 20);
+    doc.text("Email: " + utenteRegistrato.email, 10, 30);
 
     let y = 40;
-
     let totale = 0;
 
-    carrello.forEach(p=>{
-
-        doc.text(p.nome + " - €" + p.prezzo,10,y);
-
+    carrello.forEach(p => {
+        doc.text(p.nome + " - €" + p.prezzo, 10, y);
         y += 10;
 
         totale += parseFloat(p.prezzo);
     });
 
-    doc.text("Totale: €" + totale.toFixed(2),10,y+10);
+    // TOTALE PDF
+    doc.text("Totale: €" + totale.toFixed(2), 10, y + 10);
 
     doc.save("ordine.pdf");
 }
-
 </script>
 
 </body>
