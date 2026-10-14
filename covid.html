@@ -5,101 +5,89 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dati COVID-19 Italia</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 20px;
-        }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px;
-        }
-        th, td {
-            border: 1px solid #dddddd;
-            padding: 8px;
-            text-align: right;
-        }
-        th {
-            background-color: #0056b3;
-            color: white;
-            text-align: center;
-        }
-        td:first-child {
-            text-align: center;
-            font-weight: bold;
-        }
-        tr:nth-child(even) {
-            background-color: #f9f9f9;
-        }
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th, td { border: 1px solid #ddd; padding: 10px; text-align: left; }
+        th { background-color: #004080; color: white; }
+        tr:nth-child(even) { background-color: #f2f2f2; }
     </style>
 </head>
 <body>
 
-    <h2>Andamento Nazionale COVID-19</h2>
-    <p>Dati recuperati tramite XMLHttpRequest e formattati in tabella.</p>
+    <h1>Andamento Nazionale COVID-19</h1>
+    <p>Dati estratti tramite XMLHttpRequest e organizzati per data.</p>
     
-    <!-- Contenitore in cui inietteremo la tabella -->
-    <div id="tabella-container">Caricamento dati in corso...</div>
+    <!-- Tabella in cui verranno inseriti i dati -->
+    <table id="tabella-covid">
+        <thead>
+            <tr>
+                <th>Data</th>
+                <th>Nuovi Positivi</th>
+                <th>Totale Positivi</th>
+                <th>Dimessi / Guariti</th>
+                <th>Deceduti</th>
+                <th>Totale Casi</th>
+            </tr>
+        </thead>
+        <tbody id="corpo-tabella">
+            <!-- Le righe della tabella verranno generate dal codice JS -->
+        </tbody>
+    </table>
 
     <script>
-        // 1. Creazione dell'oggetto XMLHttpRequest (Teoria W3Schools: AJAX XMLHttp)
-        let xhttp = new XMLHttpRequest();
+        // 1. Creazione dell'oggetto XHR
+        const xhr = new XMLHttpRequest(); //[cite: 9]
 
-        // 2. Funzione eseguita ai cambiamenti di stato della richiesta
-        xhttp.onreadystatechange = function() {
-            // Se la richiesta è completata (4) e ha avuto successo (200)
-            if (this.readyState == 4 && this.status == 200) {
+        // 2. Preparazione della richiesta verso il server remoto
+        const url = "https://raw.githubusercontent.com/pcm-dpc/COVID-19/master/dati-json/dpc-covid19-ita-andamento-nazionale.json";
+        xhr.open("GET", url, true); //[cite: 8, 9]
+
+        // 3. Gestione della risposta dal server
+        xhr.onload = function() {
+            // Controlliamo che la richiesta sia riuscita (codice HTTP 200)
+            if (xhr.status === 200) { //[cite: 6, 8]
                 
-                // 3. Parsing del JSON (Teoria W3Schools: JS JSON)
-                let datiCovid = JSON.parse(this.responseText);
+                // 4. Conversione della risposta JSON da stringa a oggetto JavaScript
+                const dati = JSON.parse(xhr.responseText); //[cite: 7, 8, 9, 13]
                 
-                // Chiamata alla funzione per creare la tabella
-                generaTabella(datiCovid);
+                let righeTabella = "";
+
+                // Iteriamo l'array multidimensionale JSON 
+                // per creare una riga di tabella per ogni giorno registrato
+                for(let i = 0; i < dati.length; i++) {
+                    let giorno = dati[i];
+                    
+                    // Formattazione per visualizzare la data senza il timestamp dell'orario
+                    let dataPulita = giorno.data.split("T")[0];
+
+                    righeTabella += `
+                        <tr>
+                            <td>${dataPulita}</td>
+                            <td>${giorno.nuovi_positivi || 0}</td>
+                            <td>${giorno.totale_positivi || 0}</td>
+                            <td>${giorno.dimessi_guariti || 0}</td>
+                            <td>${giorno.deceduti || 0}</td>
+                            <td>${giorno.totale_casi || 0}</td>
+                        </tr>
+                    `;
+                }
+
+                // Inseriamo l'HTML generato dentro il corpo della tabella nel DOM
+                document.getElementById("corpo-tabella").innerHTML = righeTabella; //[cite: 9]
+                
+            } else {
+                // In caso di problemi stampiamo un avviso
+                document.getElementById("corpo-tabella").innerHTML = "<tr><td colspan='6'>Errore nel caricamento dei dati.</td></tr>"; //[cite: 8]
             }
         };
 
-        // 4. Apertura e invio della richiesta HTTP GET
-        let url = "https://raw.githubusercontent.com/pcm-dpc/COVID-19/master/dati-json/dpc-covid19-ita-andamento-nazionale.json";
-        xhttp.open("GET", url, true);
-        xhttp.send();
+        // Gestione di un eventuale errore nella richiesta
+        xhr.onerror = function() {
+            document.getElementById("corpo-tabella").innerHTML = "<tr><td colspan='6'>Errore di rete nella richiesta.</td></tr>"; //[cite: 8]
+        };
 
-        // Funzione per generare il codice HTML della tabella
-        function generaTabella(dati) {
-            // Intestazione della tabella
-            let html = "<table>";
-            html += "<tr>";
-            html += "<th>Data</th>";
-            html += "<th>Nuovi Positivi</th>";
-            html += "<th>Totale Casi</th>";
-            html += "<th>Deceduti</th>";
-            html += "<th>Dimessi/Guariti</th>";
-            html += "<th>Tamponi</th>";
-            html += "</tr>";
-
-            // Ciclo attraverso tutti gli elementi dell'array JSON
-            for (let i = 0; i < dati.length; i++) {
-                
-                // Formattazione della data (rimuove l'orario "T17:00:00" per lasciare solo YYYY-MM-DD)
-                let dataGrezza = dati[i].data;
-                let dataFormattata = dataGrezza.split("T")[0];
-
-                // Creazione della riga per la data corrente
-                html += "<tr>";
-                html += "<td>" + dataFormattata + "</td>";
-                html += "<td>" + dati[i].nuovi_positivi.toLocaleString('it-IT') + "</td>";
-                html += "<td>" + dati[i].totale_casi.toLocaleString('it-IT') + "</td>";
-                html += "<td>" + dati[i].deceduti.toLocaleString('it-IT') + "</td>";
-                html += "<td>" + dati[i].dimessi_guariti.toLocaleString('it-IT') + "</td>";
-                html += "<td>" + dati[i].tamponi.toLocaleString('it-IT') + "</td>";
-                html += "</tr>";
-            }
-            
-            html += "</table>";
-
-            // Inserimento della tabella generata nel DOM (sostituendo il testo "Caricamento...")
-            document.getElementById("tabella-container").innerHTML = html;
-        }
+        // 5. Invio effettivo della richiesta preparata
+        xhr.send(); //[cite: 8, 13]
     </script>
-
 </body>
 </html>
