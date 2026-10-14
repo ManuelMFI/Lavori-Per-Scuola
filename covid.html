@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dati COVID-19 Italia</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            border: 1px solid #dddddd;
+            padding: 8px;
+            text-align: right;
+        }
+        th {
+            background-color: #0056b3;
+            color: white;
+            text-align: center;
+        }
+        td:first-child {
+            text-align: center;
+            font-weight: bold;
+        }
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+    </style>
+</head>
+<body>
+
+    <h2>Andamento Nazionale COVID-19</h2>
+    <p>Dati recuperati tramite XMLHttpRequest e formattati in tabella.</p>
+    
+    <!-- Contenitore in cui inietteremo la tabella -->
+    <div id="tabella-container">Caricamento dati in corso...</div>
+
+    <script>
+        // 1. Creazione dell'oggetto XMLHttpRequest (Teoria W3Schools: AJAX XMLHttp)
+        let xhttp = new XMLHttpRequest();
+
+        // 2. Funzione eseguita ai cambiamenti di stato della richiesta
+        xhttp.onreadystatechange = function() {
+            // Se la richiesta è completata (4) e ha avuto successo (200)
+            if (this.readyState == 4 && this.status == 200) {
+                
+                // 3. Parsing del JSON (Teoria W3Schools: JS JSON)
+                let datiCovid = JSON.parse(this.responseText);
+                
+                // Chiamata alla funzione per creare la tabella
+                generaTabella(datiCovid);
+            }
+        };
+
+        // 4. Apertura e invio della richiesta HTTP GET
+        let url = "https://raw.githubusercontent.com/pcm-dpc/COVID-19/master/dati-json/dpc-covid19-ita-andamento-nazionale.json";
+        xhttp.open("GET", url, true);
+        xhttp.send();
+
+        // Funzione per generare il codice HTML della tabella
+        function generaTabella(dati) {
+            // Intestazione della tabella
+            let html = "<table>";
+            html += "<tr>";
+            html += "<th>Data</th>";
+            html += "<th>Nuovi Positivi</th>";
+            html += "<th>Totale Casi</th>";
+            html += "<th>Deceduti</th>";
+            html += "<th>Dimessi/Guariti</th>";
+            html += "<th>Tamponi</th>";
+            html += "</tr>";
+
+            // Ciclo attraverso tutti gli elementi dell'array JSON
+            for (let i = 0; i < dati.length; i++) {
+                
+                // Formattazione della data (rimuove l'orario "T17:00:00" per lasciare solo YYYY-MM-DD)
+                let dataGrezza = dati[i].data;
+                let dataFormattata = dataGrezza.split("T")[0];
+
+                // Creazione della riga per la data corrente
+                html += "<tr>";
+                html += "<td>" + dataFormattata + "</td>";
+                html += "<td>" + dati[i].nuovi_positivi.toLocaleString('it-IT') + "</td>";
+                html += "<td>" + dati[i].totale_casi.toLocaleString('it-IT') + "</td>";
+                html += "<td>" + dati[i].deceduti.toLocaleString('it-IT') + "</td>";
+                html += "<td>" + dati[i].dimessi_guariti.toLocaleString('it-IT') + "</td>";
+                html += "<td>" + dati[i].tamponi.toLocaleString('it-IT') + "</td>";
+                html += "</tr>";
+            }
+            
+            html += "</table>";
+
+            // Inserimento della tabella generata nel DOM (sostituendo il testo "Caricamento...")
+            document.getElementById("tabella-container").innerHTML = html;
+        }
+    </script>
+
+</body>
+</html>
