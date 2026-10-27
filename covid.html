@@ -1,93 +1,83 @@
 <!DOCTYPE html>
 <html lang="it">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dati COVID-19 Italia</title>
-    <style>
-        body { font-family: Arial, sans-serif; margin: 20px; }
-        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
-        th, td { border: 1px solid #ddd; padding: 10px; text-align: left; }
-        th { background-color: #004080; color: white; }
-        tr:nth-child(even) { background-color: #f2f2f2; }
-    </style>
+<meta charset="UTF-8">
+<title>Andamento nazionale COVID-19</title>
+<style>
+table, th, td {
+  border: 1px solid black;
+  border-collapse: collapse;
+}
+th, td {
+  padding: 4px 8px;
+  text-align: right;
+}
+th {
+  background-color: #dddddd;
+}
+</style>
 </head>
 <body>
 
-    <h1>Andamento Nazionale COVID-19</h1>
-    <p>Dati estratti tramite XMLHttpRequest e organizzati per data.</p>
-    
-    <!-- Tabella in cui verranno inseriti i dati -->
-    <table id="tabella-covid">
-        <thead>
-            <tr>
-                <th>Data</th>
-                <th>Nuovi Positivi</th>
-                <th>Totale Positivi</th>
-                <th>Dimessi / Guariti</th>
-                <th>Deceduti</th>
-                <th>Totale Casi</th>
-            </tr>
-        </thead>
-        <tbody id="corpo-tabella">
-            <!-- Le righe della tabella verranno generate dal codice JS -->
-        </tbody>
-    </table>
+<h1>Andamento nazionale COVID-19 (dati per data)</h1>
+<p id="demo">Caricamento...</p>
 
-    <script>
-        // 1. Creazione dell'oggetto XHR
-        const xhr = new XMLHttpRequest(); //[cite: 9]
+<script>
+var xmlhttp = new XMLHttpRequest();
 
-        // 2. Preparazione della richiesta verso il server remoto
-        const url = "https://raw.githubusercontent.com/pcm-dpc/COVID-19/master/dati-json/dpc-covid19-ita-andamento-nazionale.json";
-        xhr.open("GET", url, true); //[cite: 8, 9]
+xmlhttp.onreadystatechange = function() {
+  if (this.readyState == 4 && this.status == 200) {
+    var myObj = JSON.parse(this.responseText);
+    var txt = "";
+    var i;
 
-        // 3. Gestione della risposta dal server
-        xhr.onload = function() {
-            // Controlliamo che la richiesta sia riuscita (codice HTTP 200)
-            if (xhr.status === 200) { //[cite: 6, 8]
-                
-                // 4. Conversione della risposta JSON da stringa a oggetto JavaScript
-                const dati = JSON.parse(xhr.responseText); //[cite: 7, 8, 9, 13]
-                
-                let righeTabella = "";
+    txt += "<table>";
+    txt += "<tr>";
+    txt += "<th>Data</th>";
+    txt += "<th>Ricoverati con sintomi</th>";
+    txt += "<th>Terapia intensiva</th>";
+    txt += "<th>Totale ospedalizzati</th>";
+    txt += "<th>Isolamento domiciliare</th>";
+    txt += "<th>Totale positivi</th>";
+    txt += "<th>Variazione totale positivi</th>";
+    txt += "<th>Nuovi positivi</th>";
+    txt += "<th>Dimessi guariti</th>";
+    txt += "<th>Deceduti</th>";
+    txt += "<th>Totale casi</th>";
+    txt += "<th>Tamponi</th>";
+    txt += "</tr>";
 
-                // Iteriamo l'array multidimensionale JSON 
-                // per creare una riga di tabella per ogni giorno registrato
-                for(let i = 0; i < dati.length; i++) {
-                    let giorno = dati[i];
-                    
-                    // Formattazione per visualizzare la data senza il timestamp dell'orario
-                    let dataPulita = giorno.data.split("T")[0];
+    for (i = 0; i < myObj.length; i++) {
+      txt += "<tr>";
+      txt += "<td>" + myObj[i].data.substring(0, 10) + "</td>";
+      txt += "<td>" + myObj[i].ricoverati_con_sintomi + "</td>";
+      txt += "<td>" + myObj[i].terapia_intensiva + "</td>";
+      txt += "<td>" + myObj[i].totale_ospedalizzati + "</td>";
+      txt += "<td>" + myObj[i].isolamento_domiciliare + "</td>";
+      txt += "<td>" + myObj[i].totale_positivi + "</td>";
+      txt += "<td>" + myObj[i].variazione_totale_positivi + "</td>";
+      txt += "<td>" + myObj[i].nuovi_positivi + "</td>";
+      txt += "<td>" + myObj[i].dimessi_guariti + "</td>";
+      txt += "<td>" + myObj[i].deceduti + "</td>";
+      txt += "<td>" + myObj[i].totale_casi + "</td>";
+      txt += "<td>" + myObj[i].tamponi + "</td>";
+      txt += "</tr>";
+    }
 
-                    righeTabella += `
-                        <tr>
-                            <td>${dataPulita}</td>
-                            <td>${giorno.nuovi_positivi || 0}</td>
-                            <td>${giorno.totale_positivi || 0}</td>
-                            <td>${giorno.dimessi_guariti || 0}</td>
-                            <td>${giorno.deceduti || 0}</td>
-                            <td>${giorno.totale_casi || 0}</td>
-                        </tr>
-                    `;
-                }
+    txt += "</table>";
+    document.getElementById("demo").innerHTML = txt;
+  } else if (this.readyState == 4) {
+    document.getElementById("demo").textContent = "Errore nel caricamento. Status: " + this.status;
+  }
+};
 
-                // Inseriamo l'HTML generato dentro il corpo della tabella nel DOM
-                document.getElementById("corpo-tabella").innerHTML = righeTabella; //[cite: 9]
-                
-            } else {
-                // In caso di problemi stampiamo un avviso
-                document.getElementById("corpo-tabella").innerHTML = "<tr><td colspan='6'>Errore nel caricamento dei dati.</td></tr>"; //[cite: 8]
-            }
-        };
+xmlhttp.onerror = function() {
+  document.getElementById("demo").textContent = "Errore nella richiesta (rete bloccata o problema di accesso al file).";
+};
 
-        // Gestione di un eventuale errore nella richiesta
-        xhr.onerror = function() {
-            document.getElementById("corpo-tabella").innerHTML = "<tr><td colspan='6'>Errore di rete nella richiesta.</td></tr>"; //[cite: 8]
-        };
+xmlhttp.open("GET", "https://raw.githubusercontent.com/pcm-dpc/COVID-19/master/dati-json/dpc-covid19-ita-andamento-nazionale.json", true);
+xmlhttp.send();
+</script>
 
-        // 5. Invio effettivo della richiesta preparata
-        xhr.send(); //[cite: 8, 13]
-    </script>
 </body>
 </html>
