@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <title>Anagrafica Classe XML</title>
+</head>
+<body>
+
+    <h1>Anagrafica della Classe</h1>
+    <div id="tabella-container"></div>
+
+    <script>
+        const xhr = new XMLHttpRequest();  
+        xhr.open("GET", "classe.xml", true);
+
+        xhr.onload = function() {
+            if (xhr.status === 200) {
+                const xmlDoc = xhr.responseXML;
+                const studenti = xmlDoc.getElementsByTagName("studente");
+
+                let tabellaHTML = "<table border='1'><tr><th>Nome</th><th>Cognome</th><th>Età</th></tr>";
+
+                for (let i = 0; i < studenti.length; i++) {
+                    let nome = studenti[i].getElementsByTagName("nome").textContent;
+                    let cognome = studenti[i].getElementsByTagName("cognome").textContent;
+                    let eta = studenti[i].getElementsByTagName("eta").textContent;
+
+                    tabellaHTML += "<tr>" +
+                                   "<td>" + nome + "</td>" +
+                                   "<td>" + cognome + "</td>" +
+                                   "<td>" + eta + "</td>" +
+                                   "</tr>";
+                }
+
+                tabellaHTML += "</table>";
+                document.getElementById("tabella-container").innerHTML = tabellaHTML;
+            } else {
+                document.getElementById("tabella-container").textContent = "Errore nel caricamento dei dati.";
+            }
+        };
+
+        xhr.onerror = function() {
+            document.getElementById("tabella-container").textContent = "Errore nella richiesta (utilizza un server locale!).";
+        };
+
+        xhr.send();
+    </script>
+
+</body>
+</html>
