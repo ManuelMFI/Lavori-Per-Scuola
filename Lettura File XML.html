@@ -10,39 +10,47 @@
     <div id="risultato"></div>
 
     <script>
-        // Creazione dell'oggetto XMLHttpRequest per richiedere i dati al server
-        const xhr = new XMLHttpRequest();
-        xhr.open("GET", "classe.xml", true);
+        // Stringa XML contenuta direttamente nello script
+        const xmlText = `<?xml version="1.0" encoding="UTF-8"?>
+        <classe>
+            <studente>
+                <nome>Mario</nome>
+                <cognome>Rossi</cognome>
+                <eta>18</eta>
+            </studente>
+            <studente>
+                <nome>Luigi</nome>
+                <cognome>Verdi</cognome>
+                <eta>19</eta>
+            </studente>
+            <studente>
+                <nome>Anna</nome>
+                <cognome>Bianchi</cognome>
+                <eta>18</eta>
+            </studente>
+        </classe>`;
 
-        // Gestione della risposta al caricamento
-        xhr.onload = function() {
-            if (xhr.status === 200) { // Verifica che la richiesta sia andata a buon fine
-                const xmlDoc = xhr.responseXML;
-                const studenti = xmlDoc.getElementsByTagName("studente");
-                
-                // Inizio della tabella HTML
-                let tabella = "<table border='1'><tr><th>Nome</th><th>Cognome</th><th>Età</th></tr>";
-                
-                // Lettura dei nodi XML
-                for (let i = 0; i < studenti.length; i++) {
-                    let nome = studenti[i].getElementsByTagName("nome")[0].textContent;
-                    let cognome = studenti[i].getElementsByTagName("cognome")[0].textContent;
-                    let eta = studenti[i].getElementsByTagName("eta")[0].textContent;
-                    
-                    tabella += "<tr><td>" + nome + "</td><td>" + cognome + "</td><td>" + eta + "</td></tr>";
-                }
-                
-                tabella += "</table>";
-                
-                // Inserimento dinamico della tabella nell'HTML[cite: 1]
-                document.getElementById("risultato").innerHTML = tabella;
-            } else {
-                document.getElementById("risultato").textContent = "Errore nel caricamento.";[cite: 1]
-            }
-        };
+        // Conversione della stringa in un documento XML utilizzabile dal DOM
+        const parser = new DOMParser();
+        const xmlDoc = parser.parseFromString(xmlText, "text/xml");
 
-        // Invio della richiesta[cite: 1]
-        xhr.send();
+        // Lettura degli elementi XML
+        const studenti = xmlDoc.getElementsByTagName("studente");
+        let tabella = "<table border='1'><tr><th>Nome</th><th>Cognome</th><th>Età</th></tr>";
+
+        // Estrazione dei dati e costruzione delle righe HTML
+        for (let i = 0; i < studenti.length; i++) {
+            let nome = studenti[i].getElementsByTagName("nome")[0].textContent;
+            let cognome = studenti[i].getElementsByTagName("cognome")[0].textContent;
+            let eta = studenti[i].getElementsByTagName("eta")[0].textContent;
+
+            tabella += "<tr><td>" + nome + "</td><td>" + cognome + "</td><td>" + eta + "</td></tr>";
+        }
+
+        tabella += "</table>";
+
+        // Inserimento della tabella nella pagina
+        document.getElementById("risultato").innerHTML = tabella;
     </script>
 
 </body>
