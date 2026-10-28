@@ -2,47 +2,46 @@
 <html lang="it">
 <head>
     <meta charset="UTF-8">
-    <title>Anagrafica Classe XML</title>
+    <title>Anagrafica Classe</title>
 </head>
 <body>
 
     <h1>Anagrafica della Classe</h1>
-    <div id="tabella-container"></div>
+    <div id="risultato"></div>
 
     <script>
-        const xhr = new XMLHttpRequest();  
+        // Creazione dell'oggetto XMLHttpRequest per richiedere i dati al server
+        const xhr = new XMLHttpRequest();
         xhr.open("GET", "classe.xml", true);
 
+        // Gestione della risposta al caricamento
         xhr.onload = function() {
-            if (xhr.status === 200) {
+            if (xhr.status === 200) { // Verifica che la richiesta sia andata a buon fine
                 const xmlDoc = xhr.responseXML;
                 const studenti = xmlDoc.getElementsByTagName("studente");
-
-                let tabellaHTML = "<table border='1'><tr><th>Nome</th><th>Cognome</th><th>Età</th></tr>";
-
+                
+                // Inizio della tabella HTML
+                let tabella = "<table border='1'><tr><th>Nome</th><th>Cognome</th><th>Età</th></tr>";
+                
+                // Lettura dei nodi XML
                 for (let i = 0; i < studenti.length; i++) {
-                    let nome = studenti[i].getElementsByTagName("nome").textContent;
-                    let cognome = studenti[i].getElementsByTagName("cognome").textContent;
-                    let eta = studenti[i].getElementsByTagName("eta").textContent;
-
-                    tabellaHTML += "<tr>" +
-                                   "<td>" + nome + "</td>" +
-                                   "<td>" + cognome + "</td>" +
-                                   "<td>" + eta + "</td>" +
-                                   "</tr>";
+                    let nome = studenti[i].getElementsByTagName("nome")[0].textContent;
+                    let cognome = studenti[i].getElementsByTagName("cognome")[0].textContent;
+                    let eta = studenti[i].getElementsByTagName("eta")[0].textContent;
+                    
+                    tabella += "<tr><td>" + nome + "</td><td>" + cognome + "</td><td>" + eta + "</td></tr>";
                 }
-
-                tabellaHTML += "</table>";
-                document.getElementById("tabella-container").innerHTML = tabellaHTML;
+                
+                tabella += "</table>";
+                
+                // Inserimento dinamico della tabella nell'HTML[cite: 1]
+                document.getElementById("risultato").innerHTML = tabella;
             } else {
-                document.getElementById("tabella-container").textContent = "Errore nel caricamento dei dati.";
+                document.getElementById("risultato").textContent = "Errore nel caricamento.";[cite: 1]
             }
         };
 
-        xhr.onerror = function() {
-            document.getElementById("tabella-container").textContent = "Errore nella richiesta (utilizza un server locale!).";
-        };
-
+        // Invio della richiesta[cite: 1]
         xhr.send();
     </script>
 
