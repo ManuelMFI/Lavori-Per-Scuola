@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<classe>
+    <studente>
+        <nome>Mario</nome>
+        <cognome>Rossi</cognome>
+        <eta>17</eta>
+        <classe>4A</classe>
+    </studente>
+
+    <studente>
+        <nome>Laura</nome>
+        <cognome>Bianchi</cognome>
+        <eta>18</eta>
+        <classe>4A</classe>
+    </studente>
+
+    <studente>
+        <nome>Luca</nome>
+        <cognome>Verdi</cognome>
+        <eta>17</eta>
+        <classe>4A</classe>
+    </studente>
+
+    <studente>
+        <nome>Giulia</nome>
+        <cognome>Ferrari</cognome>
+        <eta>18</eta>
+        <classe>4A</classe>
+    </studente>
+</classe>
