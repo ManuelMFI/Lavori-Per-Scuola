@@ -2,30 +2,72 @@
 
 <classe>
     <studente>
-        <nome>Mario</nome>
-        <cognome>Rossi</cognome>
-        <eta>17</eta>
-        <classe>4A</classe>
+        <nome>Leonardo</nome>
+        <cognome>Barsacchi</cognome>
+        <eta>18</eta>
+        <classe>5AINF</classe>
     </studente>
 
     <studente>
-        <nome>Laura</nome>
-        <cognome>Bianchi</cognome>
-        <eta>18</eta>
-        <classe>4A</classe>
+        <nome>Mattia</nome>
+        <cognome>Belleri</cognome>
+        <eta>17</eta>
+        <classe>5AINF</classe>
     </studente>
 
     <studente>
         <nome>Luca</nome>
-        <cognome>Verdi</cognome>
-        <eta>17</eta>
-        <classe>4A</classe>
+        <cognome>Borghetti</cognome>
+        <eta>18</eta>
+        <classe>5AINF</classe>
     </studente>
 
     <studente>
-        <nome>Giulia</nome>
-        <cognome>Ferrari</cognome>
+        <nome>Nicolò</nome>
+        <cognome>Broglia</cognome>
         <eta>18</eta>
-        <classe>4A</classe>
+        <classe>5AINF</classe>
+    </studente>
+    
+    <studente>
+        <nome>Nicolò</nome>
+        <cognome>Broglia</cognome>
+        <eta>18</eta>
+        <classe>5AINF</classe>
+    </studente>
+    
+    <studente>
+        <nome>Luca</nome>
+        <cognome>Carnicella</cognome>
+        <eta>18</eta>
+        <classe>5AINF</classe>
+    </studente>
+
+    <studente>
+        <nome>Cristian</nome>
+        <cognome>Ferrigolo</cognome>
+        <eta>18</eta>
+        <classe>5AINF</classe>
+    </studente>
+
+    <studente>
+        <nome>Elias</nome>
+        <cognome>Fornaro</cognome>
+        <eta>18</eta>
+        <classe>5AINF</classe>
+    </studente>
+
+    <studente>
+        <nome>Ibrahim</nome>
+        <cognome>Hassan</cognome>
+        <eta>20</eta>
+        <classe>5AINF</classe>
+    </studente>
+
+    <studente>
+        <nome>Federico</nome>
+        <cognome>Lui</cognome>
+        <eta>18</eta>
+        <classe>5AINF</classe>
     </studente>
 </classe>
