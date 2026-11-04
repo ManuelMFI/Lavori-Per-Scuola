@@ -1,56 +1,94 @@
+
 <!DOCTYPE html>
-<html lang="it">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <title>Anagrafica Classe</title>
-</head>
-<body>
+    <title>Anagrafica classe</title>
 
-    <h1>Anagrafica della Classe</h1>
-    <div id="risultato"></div>
-
-    <script>
-        // Stringa XML contenuta direttamente nello script
-        const xmlText = `<?xml version="1.0" encoding="UTF-8"?>
-        <classe>
-            <studente>
-                <nome>Mario</nome>
-                <cognome>Rossi</cognome>
-                <eta>18</eta>
-            </studente>
-            <studente>
-                <nome>Luigi</nome>
-                <cognome>Verdi</cognome>
-                <eta>19</eta>
-            </studente>
-            <studente>
-                <nome>Anna</nome>
-                <cognome>Bianchi</cognome>
-                <eta>18</eta>
-            </studente>
-        </classe>`;
-
-        // Conversione della stringa in un documento XML utilizzabile dal DOM
-        const parser = new DOMParser();
-        const xmlDoc = parser.parseFromString(xmlText, "text/xml");
-
-        // Lettura degli elementi XML
-        const studenti = xmlDoc.getElementsByTagName("studente");
-        let tabella = "<table border='1'><tr><th>Nome</th><th>Cognome</th><th>Età</th></tr>";
-
-        // Estrazione dei dati e costruzione delle righe HTML
-        for (let i = 0; i < studenti.length; i++) {
-            let nome = studenti[i].getElementsByTagName("nome")[0].textContent;
-            let cognome = studenti[i].getElementsByTagName("cognome")[0].textContent;
-            let eta = studenti[i].getElementsByTagName("eta")[0].textContent;
-
-            tabella += "<tr><td>" + nome + "</td><td>" + cognome + "</td><td>" + eta + "</td></tr>";
+    <style>
+        table {
+            border-collapse: collapse;
+            width: 70%;
         }
 
-        tabella += "</table>";
+        th, td {
+            border: 1px solid black;
+            padding: 10px;
+            text-align: center;
+        }
 
-        // Inserimento della tabella nella pagina
-        document.getElementById("risultato").innerHTML = tabella;
+        th {
+            background-color: lightblue;
+        }
+    </style>
+</head>
+
+<body>
+
+    <h1>Anagrafica della classe 4A</h1>
+
+    <table id="tabella">
+
+        <tr>
+            <th>Nome</th>
+            <th>Cognome</th>
+            <th>Età</th>
+            <th>Classe</th>
+        </tr>
+
+    </table>
+
+    <script>
+
+        // Creo una nuova richiesta
+        let xhttp = new XMLHttpRequest();
+
+        // Controllo quando la richiesta è completata
+        xhttp.onreadystatechange = function() {
+
+            if (this.readyState == 4 && this.status == 200) {
+
+                // Recupero il documento XML
+                let xmlDoc = this.responseXML;
+
+                // Recupero tutti gli studenti
+                let studenti = xmlDoc.getElementsByTagName("studente");
+
+                // Recupero la tabella HTML
+                let tabella = document.getElementById("tabella");
+
+                // Scorro tutti gli studenti
+                for (let i = 0; i < studenti.length; i++) {
+
+                    // Leggo i dati dello studente
+                    let nome = studenti[i].getElementsByTagName("nome")[0].childNodes[0].nodeValue;
+
+                    let cognome = studenti[i].getElementsByTagName("cognome")[0].childNodes[0].nodeValue;
+
+                    let eta = studenti[i].getElementsByTagName("eta")[0].childNodes[0].nodeValue;
+
+                    let classe = studenti[i].getElementsByTagName("classe")[0].childNodes[0].nodeValue;
+
+                    // Creo una nuova riga
+                    let riga = tabella.insertRow();
+
+                    // Inserisco le celle
+                    riga.insertCell(0).textContent = nome;
+                    riga.insertCell(1).textContent = cognome;
+                    riga.insertCell(2).textContent = eta;
+                    riga.insertCell(3).textContent = classe;
+
+                }
+
+            }
+
+        };
+
+        // Apro la richiesta per leggere il file XML
+        xhttp.open("GET", "classe.xml", true);
+
+        // Invio la richiesta
+        xhttp.send();
+
     </script>
 
 </body>
